@@ -22,3 +22,10 @@ class Device(BaseModel):
 @app.get("/devices")
 def get_devices():
     return list(devices.find({}, {"_id": 0}))
+
+@app.get("devices/{name}")
+def get_devices(name:str):
+    devices = devices.find_one({"name": name}, {"_id"})
+    if devices is None:
+        raise HTTPException(status_code=404, detail="Device not found"+name)
+    return devices
