@@ -19,3 +19,6 @@ class Device(BaseModel):
     temp: float
     online: bool
 
+@app.get("/devices")
+def get_devices():
+    return list(devices.find({}, {"_id": 0}))
