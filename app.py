@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pymongo import MongoClient
 
+
 load_dotenv()
 client = MongoClient(os.getenv("MONGODB_URI"))
 db = client["ecse3038"]
@@ -29,3 +30,12 @@ def get_devices(name:str):
     if devices is None:
         raise HTTPException(status_code=404, detail="Device not found"+name)
     return devices
+
+@app.post("/devices", status_code=201)
+def create_device(device: Device):
+    new_device = device.model_dump()
+    devices.insert_one(new_device)
+    new_device.pop("_id")  
+    return new_device
+
+    
